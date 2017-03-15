@@ -9,7 +9,7 @@
   @brief        LSH (Libstephen SHell)
 
 *******************************************************************************/
-
+// new commit
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -29,6 +29,16 @@ char *builtin_str[] = {
   "cd",
   "exit"
 };
+
+
+char *additional_str[] = {
+        "ls",
+        "cp",
+        "mv",
+        "rm",
+        "mkdir"
+};
+
 
 int (*builtin_func[]) (char **) = {
   &lsh_cd,
@@ -122,9 +132,12 @@ int lsh_execute(char **args)
   }
 
   for (i = 0; i < lsh_num_builtins(); i++) {
-    if (strcmp(args[0], builtin_str[i]) == 0) {
-      return (*builtin_func[i])(args);
-    }
+        if (strcmp(args[0], builtin_str[i]) == 0) {
+        return (*builtin_func[i])(args);
+        }
+        if (strcmp(args[0], additional_str[i]) == 0){
+            return (*additional_func[i])(args);   // load function
+        }
   }
 
   return lsh_launch(args);
