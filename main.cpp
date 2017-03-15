@@ -20,7 +20,6 @@
   Function Declarations for builtin shell commands:
  */
 int lsh_cd(char **args);
-int lsh_help(char **args);
 int lsh_exit(char **args);
 
 /*
@@ -28,13 +27,11 @@ int lsh_exit(char **args);
  */
 char *builtin_str[] = {
   "cd",
-  "help",
   "exit"
 };
 
 int (*builtin_func[]) (char **) = {
   &lsh_cd,
-  &lsh_help,
   &lsh_exit
 };
 
@@ -68,20 +65,7 @@ int lsh_cd(char **args)
    @param args List of args.  Not examined.
    @return Always returns 1, to continue executing.
  */
-int lsh_help(char **args)
-{
-  int i;
-  printf("Stephen Brennan's LSH\n");
-  printf("Type program names and arguments, and hit enter.\n");
-  printf("The following are built in:\n");
 
-  for (i = 0; i < lsh_num_builtins(); i++) {
-    printf("  %s\n", builtin_str[i]);
-  }
-
-  printf("Use the man command for information on other programs.\n");
-  return 1;
-}
 
 /**
    @brief Builtin command: exit.
