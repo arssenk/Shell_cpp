@@ -1,14 +1,4 @@
-/***************************************************************************//**
 
-  @file         main.c
-
-  @author       Stephen Brennan
-
-  @date         Thursday,  8 January 2015
-
-  @brief        LSH (Libstephen SHell)
-
-*******************************************************************************/
 // new commit
 #include <sys/wait.h>
 #include <unistd.h>
@@ -135,9 +125,9 @@ int lsh_execute(char **args)
         if (strcmp(args[0], builtin_str[i]) == 0) {
         return (*builtin_func[i])(args);
         }
-        if (strcmp(args[0], additional_str[i]) == 0){
-            return (*additional_func[i])(args);   // load function
-        }
+//        if (strcmp(args[0], additional_str[i]) == 0){
+//            return (*additional_func[i])(args);   // load function
+//        }
   }
 
   return lsh_launch(args);
