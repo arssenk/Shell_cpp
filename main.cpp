@@ -5,7 +5,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <boost/signal.hpp>
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
+//#include "ls.h"
 /*
   Function Declarations for builtin shell commands:
  */
@@ -21,7 +24,7 @@ char *builtin_str[] = {
 };
 
 
-char *additional_str[] = {
+const  char *  additional_str[] = {
         "ls",
         "cp",
         "mv",
@@ -217,8 +220,8 @@ int main(int argc, char **argv)
   // Load config files, if any.
 
   // Run command loop.
-  lsh_loop();
-
+   lsh_loop();
+  //ls_func(argc, argv);
   // Perform any shutdown/cleanup.
 
   return EXIT_SUCCESS;
