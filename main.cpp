@@ -8,7 +8,7 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
-//#include "ls.h"
+#include "ls.h"
 /*
   Function Declarations for builtin shell commands:
  */
@@ -30,13 +30,16 @@ const  char *  additional_str[] = {
         "mv",
         "rm",
         "mkdir"
+        "ls_func"
 };
 
 
 int (*builtin_func[]) (char **) = {
   &lsh_cd,
   &lsh_exit
+
 };
+
 
 int lsh_num_builtins() {
   return sizeof(builtin_str) / sizeof(char *);
@@ -118,7 +121,7 @@ int lsh_launch(char **args)
 int lsh_execute(char **args)
 {
   int i;
-
+    printf("ENTER EX\n");
   if (args[0] == NULL) {
     // An empty command was entered.
     return 1;
@@ -128,6 +131,12 @@ int lsh_execute(char **args)
         if (strcmp(args[0], builtin_str[i]) == 0) {
         return (*builtin_func[i])(args);
         }
+
+
+      }
+    printf("HERE\n", args);
+    if (args == (char **) "ls_func"){
+        printf("POBEDA~~~");
 //        if (strcmp(args[0], additional_str[i]) == 0){
 //            return (*additional_func[i])(args);   // load function
 //        }
@@ -146,6 +155,7 @@ char *lsh_read_line(void)
   char *line = NULL;
   size_t bufsize = 0; // have getline allocate a buffer for us
   getline(&line, &bufsize, stdin);
+    printf("PRELINE : ", line);
   return line;
 }
 
@@ -171,7 +181,6 @@ char **lsh_split_line(char *line)
     tokens[position] = token;
     position++;
 
-
     if (position >= bufsize) {
       bufsize += LSH_TOK_BUFSIZE;
       tokens_backup = tokens;
@@ -186,6 +195,7 @@ char **lsh_split_line(char *line)
     token = strtok(NULL, LSH_TOK_DELIM);
   }
   tokens[position] = NULL;
+          printf("TOKENS: ", tokens);
   return tokens;
 }
 
@@ -201,7 +211,9 @@ void lsh_loop(void)
   do {
     printf("> ");
     line = lsh_read_line();
+      printf("LINE: ", line);
     args = lsh_split_line(line);
+      printf("ARGSL: ", args);
     status = lsh_execute(args);
 
     free(line);
