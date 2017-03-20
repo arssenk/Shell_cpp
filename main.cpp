@@ -52,7 +52,7 @@ int lsh_num_builtins() {
 /*
   Builtin function implementations.
 */
-*/
+
 /**Bultin command: shows the current direcory
  * List of args, where agrs[0] is "pwd"
  */
