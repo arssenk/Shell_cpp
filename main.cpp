@@ -43,11 +43,7 @@ int (*builtin_func[]) (char **) = {
 
 };
 
-int lsh_pwd(char **args)
-        {
-    boost::filesystem::path full_path(boost::filesystem::current_path());
-    std::cout << "Current path is : " << full_path << std::endl;
-}
+
 
 int lsh_num_builtins() {
   return sizeof(builtin_str) / sizeof(char *);
@@ -56,12 +52,23 @@ int lsh_num_builtins() {
 /*
   Builtin function implementations.
 */
+*/
+/**Bultin command: shows the current direcory
+ * List of args, where agrs[0] is "pwd"
+ */
 
+int lsh_pwd(char **args)
+{
+    boost::filesystem::path full_path(boost::filesystem::current_path());
+    std::cout << "Current path is : " << full_path << std::endl;
+}
 /**
    @brief Bultin command: change directory.
    @param args List of args.  args[0] is "cd".  args[1] is the directory.
    @return Always returns 1, to continue executing.
  */
+
+
 int lsh_cd(char **args)
 {
   if (args[1] == NULL) {
