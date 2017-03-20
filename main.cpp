@@ -14,13 +14,15 @@
  */
 int lsh_cd(char **args);
 int lsh_exit(char **args);
+int  lsh_pwd(char **args);
 
 /*
   List of builtin commands, followed by their corresponding functions.
  */
 char *builtin_str[] = {
   "cd",
-  "exit"
+  "exit",
+"pwd"
 };
 
 
@@ -36,10 +38,16 @@ const  char *  additional_str[] = {
 
 int (*builtin_func[]) (char **) = {
   &lsh_cd,
-  &lsh_exit
+  &lsh_exit,
+&lsh_pwd	
 
 };
 
+int lsh_pwd(char **args)
+        {
+    boost::filesystem::path full_path(boost::filesystem::current_path());
+    std::cout << "Current path is : " << full_path << std::endl;
+}
 
 int lsh_num_builtins() {
   return sizeof(builtin_str) / sizeof(char *);
