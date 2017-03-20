@@ -121,7 +121,7 @@ int lsh_launch(char **args)
 int lsh_execute(char **args)
 {
   int i;
-    printf("ENTER EX\n");
+
   if (args[0] == NULL) {
     // An empty command was entered.
     return 1;
@@ -134,13 +134,14 @@ int lsh_execute(char **args)
 
 
       }
-    printf("HERE\n", args);
     if (args == (char **) "ls_func"){
         printf("POBEDA~~~");
 //        if (strcmp(args[0], additional_str[i]) == 0){
 //            return (*additional_func[i])(args);   // load function
 //        }
   }
+   printf(args[0]);
+    printf("\n");
 
   return lsh_launch(args);
 }
@@ -155,7 +156,6 @@ char *lsh_read_line(void)
   char *line = NULL;
   size_t bufsize = 0; // have getline allocate a buffer for us
   getline(&line, &bufsize, stdin);
-    printf("PRELINE : ", line);
   return line;
 }
 
@@ -195,7 +195,7 @@ char **lsh_split_line(char *line)
     token = strtok(NULL, LSH_TOK_DELIM);
   }
   tokens[position] = NULL;
-          printf("TOKENS: ", tokens);
+
   return tokens;
 }
 
@@ -211,9 +211,9 @@ void lsh_loop(void)
   do {
     printf("> ");
     line = lsh_read_line();
-      printf("LINE: ", line);
+
     args = lsh_split_line(line);
-      printf("ARGSL: ", args);
+
     status = lsh_execute(args);
 
     free(line);

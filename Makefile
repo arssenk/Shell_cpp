@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/arsen/Programs/clion-2016.3.4/bin/cmake/bin/cmake
+CMAKE_COMMAND = /home/maria/Documents/Programs/clion-2016.3.4/bin/cmake/bin/cmake
 
 # The command to remove a file.
-RM = /home/arsen/Programs/clion-2016.3.4/bin/cmake/bin/cmake -E remove -f
+RM = /home/maria/Documents/Programs/clion-2016.3.4/bin/cmake/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final"
+CMAKE_SOURCE_DIR = /home/maria/CLionProjects/Shell_final
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final"
+CMAKE_BINARY_DIR = /home/maria/CLionProjects/Shell_final
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final"
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/arsen/Programs/clion-2016.3.4/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/home/maria/Documents/Programs/clion-2016.3.4/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -70,7 +70,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/arsen/Programs/clion-2016.3.4/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/maria/Documents/Programs/clion-2016.3.4/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final/CMakeFiles" "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maria/CLionProjects/Shell_final/CMakeFiles /home/maria/CLionProjects/Shell_final/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maria/CLionProjects/Shell_final/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -135,6 +135,33 @@ Shell_cpp: cmake_check_build_system
 Shell_cpp/fast:
 	$(MAKE) -f CMakeFiles/Shell_cpp.dir/build.make CMakeFiles/Shell_cpp.dir/build
 .PHONY : Shell_cpp/fast
+
+copy.o: copy.cpp.o
+
+.PHONY : copy.o
+
+# target to build an object file
+copy.cpp.o:
+	$(MAKE) -f CMakeFiles/ls_cpp.dir/build.make CMakeFiles/ls_cpp.dir/copy.cpp.o
+.PHONY : copy.cpp.o
+
+copy.i: copy.cpp.i
+
+.PHONY : copy.i
+
+# target to preprocess a source file
+copy.cpp.i:
+	$(MAKE) -f CMakeFiles/ls_cpp.dir/build.make CMakeFiles/ls_cpp.dir/copy.cpp.i
+.PHONY : copy.cpp.i
+
+copy.s: copy.cpp.s
+
+.PHONY : copy.s
+
+# target to generate assembly for a file
+copy.cpp.s:
+	$(MAKE) -f CMakeFiles/ls_cpp.dir/build.make CMakeFiles/ls_cpp.dir/copy.cpp.s
+.PHONY : copy.cpp.s
 
 ls.o: ls.cpp.o
 
@@ -227,6 +254,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... ls_cpp"
 	@echo "... Shell_cpp"
+	@echo "... copy.o"
+	@echo "... copy.i"
+	@echo "... copy.s"
 	@echo "... ls.o"
 	@echo "... ls.i"
 	@echo "... ls.s"

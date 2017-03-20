@@ -5,7 +5,7 @@ project(Shell_cpp_proj)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES main.cpp )
-set(SOURCE_FILES_LS main_ls.cpp ls.cpp ls.h)
+set(SOURCE_FILES_LS main_ls.cpp ls.cpp ls.h copy.cpp)
 
 add_executable(Shell_cpp ${SOURCE_FILES})
 add_executable(ls_cpp ${SOURCE_FILES_LS})
