@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/arsen/Programs/clion-2016.3.4/bin/cmake/bin/cmake
+CMAKE_COMMAND = /home/oksana/Документи/Programs/clion-2016.3.4/bin/cmake/bin/cmake
 
 # The command to remove a file.
-RM = /home/arsen/Programs/clion-2016.3.4/bin/cmake/bin/cmake -E remove -f
+RM = /home/oksana/Документи/Programs/clion-2016.3.4/bin/cmake/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final"
+CMAKE_SOURCE_DIR = /home/oksana/CLionProjects/Shell_cpp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final"
+CMAKE_BINARY_DIR = /home/oksana/CLionProjects/Shell_cpp
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final"
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/arsen/Programs/clion-2016.3.4/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/home/oksana/Документи/Programs/clion-2016.3.4/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -70,7 +70,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/arsen/Programs/clion-2016.3.4/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/oksana/Документи/Programs/clion-2016.3.4/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final/CMakeFiles" "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/oksana/CLionProjects/Shell_cpp/CMakeFiles /home/oksana/CLionProjects/Shell_cpp/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/arsen/Documents/Year_2/Semester 2/OS/PR2/Shell_final/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/oksana/CLionProjects/Shell_cpp/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -109,6 +109,19 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named mkdir_cpp
+
+# Build rule for target.
+mkdir_cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mkdir_cpp
+.PHONY : mkdir_cpp
+
+# fast build rule for target.
+mkdir_cpp/fast:
+	$(MAKE) -f CMakeFiles/mkdir_cpp.dir/build.make CMakeFiles/mkdir_cpp.dir/build
+.PHONY : mkdir_cpp/fast
 
 #=============================================================================
 # Target rules for targets named ls_cpp
@@ -217,6 +230,63 @@ main_ls.cpp.s:
 	$(MAKE) -f CMakeFiles/ls_cpp.dir/build.make CMakeFiles/ls_cpp.dir/main_ls.cpp.s
 .PHONY : main_ls.cpp.s
 
+main_mkdir.o: main_mkdir.cpp.o
+
+.PHONY : main_mkdir.o
+
+# target to build an object file
+main_mkdir.cpp.o:
+	$(MAKE) -f CMakeFiles/mkdir_cpp.dir/build.make CMakeFiles/mkdir_cpp.dir/main_mkdir.cpp.o
+.PHONY : main_mkdir.cpp.o
+
+main_mkdir.i: main_mkdir.cpp.i
+
+.PHONY : main_mkdir.i
+
+# target to preprocess a source file
+main_mkdir.cpp.i:
+	$(MAKE) -f CMakeFiles/mkdir_cpp.dir/build.make CMakeFiles/mkdir_cpp.dir/main_mkdir.cpp.i
+.PHONY : main_mkdir.cpp.i
+
+main_mkdir.s: main_mkdir.cpp.s
+
+.PHONY : main_mkdir.s
+
+# target to generate assembly for a file
+main_mkdir.cpp.s:
+	$(MAKE) -f CMakeFiles/mkdir_cpp.dir/build.make CMakeFiles/mkdir_cpp.dir/main_mkdir.cpp.s
+.PHONY : main_mkdir.cpp.s
+
+mkdir.o: mkdir.cpp.o
+
+.PHONY : mkdir.o
+
+# target to build an object file
+mkdir.cpp.o:
+	$(MAKE) -f CMakeFiles/mkdir_cpp.dir/build.make CMakeFiles/mkdir_cpp.dir/mkdir.cpp.o
+	$(MAKE) -f CMakeFiles/Shell_cpp.dir/build.make CMakeFiles/Shell_cpp.dir/mkdir.cpp.o
+.PHONY : mkdir.cpp.o
+
+mkdir.i: mkdir.cpp.i
+
+.PHONY : mkdir.i
+
+# target to preprocess a source file
+mkdir.cpp.i:
+	$(MAKE) -f CMakeFiles/mkdir_cpp.dir/build.make CMakeFiles/mkdir_cpp.dir/mkdir.cpp.i
+	$(MAKE) -f CMakeFiles/Shell_cpp.dir/build.make CMakeFiles/Shell_cpp.dir/mkdir.cpp.i
+.PHONY : mkdir.cpp.i
+
+mkdir.s: mkdir.cpp.s
+
+.PHONY : mkdir.s
+
+# target to generate assembly for a file
+mkdir.cpp.s:
+	$(MAKE) -f CMakeFiles/mkdir_cpp.dir/build.make CMakeFiles/mkdir_cpp.dir/mkdir.cpp.s
+	$(MAKE) -f CMakeFiles/Shell_cpp.dir/build.make CMakeFiles/Shell_cpp.dir/mkdir.cpp.s
+.PHONY : mkdir.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -224,6 +294,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... mkdir_cpp"
 	@echo "... rebuild_cache"
 	@echo "... ls_cpp"
 	@echo "... Shell_cpp"
@@ -236,6 +307,12 @@ help:
 	@echo "... main_ls.o"
 	@echo "... main_ls.i"
 	@echo "... main_ls.s"
+	@echo "... main_mkdir.o"
+	@echo "... main_mkdir.i"
+	@echo "... main_mkdir.s"
+	@echo "... mkdir.o"
+	@echo "... mkdir.i"
+	@echo "... mkdir.s"
 .PHONY : help
 
 

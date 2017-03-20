@@ -1,4 +1,3 @@
-
 // new commit
 #include <sys/wait.h>
 #include <unistd.h>
@@ -9,46 +8,68 @@
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include "ls.h"
+#include <iostream>
+#include "mkdir.h"
+
+using namespace std;
+using namespace boost::filesystem;
+namespace fs = boost::filesystem;
 /*
   Function Declarations for builtin shell commands:
  */
 int lsh_cd(char **args);
 int lsh_exit(char **args);
-
+int  lsh_pwd(char **args);
 /*
   List of builtin commands, followed by their corresponding functions.
  */
 char *builtin_str[] = {
-  "cd",
-  "exit"
+        "cd",
+        "exit",
+        "pwd"
 };
 
 
 const  char *  additional_str[] = {
+        "mkdir",
         "ls",
         "cp",
         "mv",
         "rm",
-        "mkdir"
         "ls_func"
+};
+using additional_func_t = void (*)(fs::path p, fs::path name);
+
+additional_func_t additional_funcs[] = {
+        &mkdir_func
 };
 
 
 int (*builtin_func[]) (char **) = {
-  &lsh_cd,
-  &lsh_exit
+        &lsh_cd,
+        &lsh_exit,
+        &lsh_pwd
 
 };
 
 
 int lsh_num_builtins() {
-  return sizeof(builtin_str) / sizeof(char *);
+    return sizeof(builtin_str) / sizeof(char *);
 }
 
 /*
   Builtin function implementations.
 */
 
+/**Bultin command: shows the current direcory
+ * List of args, where agrs[0] is "pwd"
+ */
+
+int lsh_pwd(char **args)
+{
+    boost::filesystem::path full_path(boost::filesystem::current_path());
+    std::cout << "Current path is : " << full_path << std::endl;
+}
 /**
    @brief Bultin command: change directory.
    @param args List of args.  args[0] is "cd".  args[1] is the directory.
@@ -56,14 +77,14 @@ int lsh_num_builtins() {
  */
 int lsh_cd(char **args)
 {
-  if (args[1] == NULL) {
-    fprintf(stderr, "lsh: expected argument to \"cd\"\n");
-  } else {
-    if (chdir(args[1]) != 0) {
-      perror("lsh");
+    if (args[1] == NULL) {
+        fprintf(stderr, "lsh: expected argument to \"cd\"\n");
+    } else {
+        if (chdir(args[1]) != 0) {
+            perror("lsh");
+        }
     }
-  }
-  return 1;
+    return 1;
 }
 
 /**
@@ -80,7 +101,7 @@ int lsh_cd(char **args)
  */
 int lsh_exit(char **args)
 {
-  return 0;
+    return 0;
 }
 
 /**
@@ -90,27 +111,27 @@ int lsh_exit(char **args)
  */
 int lsh_launch(char **args)
 {
-  pid_t pid;
-  int status;
+    pid_t pid;
+    int status;
 
-  pid = fork();
-  if (pid == 0) {
-    // Child process
-    if (execvp(args[0], args) == -1) {
-      perror("lsh");
+    pid = fork();
+    if (pid == 0) {
+        // Child process
+        if (execvp(args[0], args) == -1) {
+            perror("lsh");
+        }
+        exit(EXIT_FAILURE);
+    } else if (pid < 0) {
+        // Error forking
+        perror("lsh");
+    } else {
+        // Parent process
+        do {
+            waitpid(pid, &status, WUNTRACED);
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
-    exit(EXIT_FAILURE);
-  } else if (pid < 0) {
-    // Error forking
-    perror("lsh");
-  } else {
-    // Parent process
-    do {
-      waitpid(pid, &status, WUNTRACED);
-    } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-  }
 
-  return 1;
+    return 1;
 }
 
 /**
@@ -120,29 +141,35 @@ int lsh_launch(char **args)
  */
 int lsh_execute(char **args)
 {
-  int i;
-    printf("ENTER EX\n");
-  if (args[0] == NULL) {
-    // An empty command was entered.
-    return 1;
-  }
+    int i;
 
-  for (i = 0; i < lsh_num_builtins(); i++) {
+    if (args[0] == NULL) {
+        // An empty command was entered.
+        return 1;
+    }
+    if (args == (char **) "mkdir"){
+        boost::filesystem::path name;
+        cin >> name;
+        mkdir_func(fs::current_path(), name);
+        return 0;
+    }
+    for (i = 0; i < lsh_num_builtins(); i++) {
         if (strcmp(args[0], builtin_str[i]) == 0) {
-        return (*builtin_func[i])(args);
+            return (*builtin_func[i])(args);
         }
 
 
-      }
-    printf("HERE\n", args);
+    }
     if (args == (char **) "ls_func"){
         printf("POBEDA~~~");
 //        if (strcmp(args[0], additional_str[i]) == 0){
 //            return (*additional_func[i])(args);   // load function
 //        }
-  }
+    }
+    printf(args[0]);
+    printf("\n");
 
-  return lsh_launch(args);
+    return lsh_launch(args);
 }
 
 #define LSH_RL_BUFSIZE 1024
@@ -152,11 +179,10 @@ int lsh_execute(char **args)
  */
 char *lsh_read_line(void)
 {
-  char *line = NULL;
-  size_t bufsize = 0; // have getline allocate a buffer for us
-  getline(&line, &bufsize, stdin);
-    printf("PRELINE : ", line);
-  return line;
+    char *line = NULL;
+    size_t bufsize = 0; // have getline allocate a buffer for us
+    getline(&line, &bufsize, stdin);
+    return line;
 }
 
 #define LSH_TOK_BUFSIZE 64
@@ -168,35 +194,35 @@ char *lsh_read_line(void)
  */
 char **lsh_split_line(char *line)
 {
-  int bufsize = LSH_TOK_BUFSIZE, position = 0;
-  char **tokens = (char **) malloc(bufsize * sizeof(char*));
-  char *token, **tokens_backup;
+    int bufsize = LSH_TOK_BUFSIZE, position = 0;
+    char **tokens = (char **) malloc(bufsize * sizeof(char*));
+    char *token, **tokens_backup;
 
-  if (!tokens) {
-    fprintf(stderr, "lsh: allocation error\n");
-    exit(EXIT_FAILURE);
-  }
-  token = strtok(line, LSH_TOK_DELIM);
-  while (token != NULL) {
-    tokens[position] = token;
-    position++;
-
-    if (position >= bufsize) {
-      bufsize += LSH_TOK_BUFSIZE;
-      tokens_backup = tokens;
-      tokens = (char **) realloc(tokens, bufsize * sizeof(char*));
-      if (!tokens) {
-		free(tokens_backup);
+    if (!tokens) {
         fprintf(stderr, "lsh: allocation error\n");
         exit(EXIT_FAILURE);
-      }
     }
+    token = strtok(line, LSH_TOK_DELIM);
+    while (token != NULL) {
+        tokens[position] = token;
+        position++;
 
-    token = strtok(NULL, LSH_TOK_DELIM);
-  }
-  tokens[position] = NULL;
-          printf("TOKENS: ", tokens);
-  return tokens;
+        if (position >= bufsize) {
+            bufsize += LSH_TOK_BUFSIZE;
+            tokens_backup = tokens;
+            tokens = (char **) realloc(tokens, bufsize * sizeof(char*));
+            if (!tokens) {
+                free(tokens_backup);
+                fprintf(stderr, "lsh: allocation error\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        token = strtok(NULL, LSH_TOK_DELIM);
+    }
+    tokens[position] = NULL;
+
+    return tokens;
 }
 
 /**
@@ -204,21 +230,21 @@ char **lsh_split_line(char *line)
  */
 void lsh_loop(void)
 {
-  char *line;
-  char **args;
-  int status;
+    char *line;
+    char **args;
+    int status;
 
-  do {
-    printf("> ");
-    line = lsh_read_line();
-      printf("LINE: ", line);
-    args = lsh_split_line(line);
-      printf("ARGSL: ", args);
-    status = lsh_execute(args);
+    do {
+        printf("> ");
+        line = lsh_read_line();
 
-    free(line);
-    free(args);
-  } while (status);
+        args = lsh_split_line(line);
+
+        status = lsh_execute(args);
+
+        free(line);
+        free(args);
+    } while (status);
 }
 
 /**
@@ -229,13 +255,12 @@ void lsh_loop(void)
  */
 int main(int argc, char **argv)
 {
-  // Load config files, if any.
+    // Load config files, if any.
 
-  // Run command loop.
-   lsh_loop();
-  //ls_func(argc, argv);
-  // Perform any shutdown/cleanup.
+    // Run command loop.
+    lsh_loop();
+    //ls_func(argc, argv);
+    // Perform any shutdown/cleanup.
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
-
