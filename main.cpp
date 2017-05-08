@@ -68,7 +68,8 @@ int lsh_num_builtins() {
 int lsh_pwd(char **args)
 {
     boost::filesystem::path full_path(boost::filesystem::current_path());
-    std::cout << "Current path is : " << full_path << std::endl;
+    string pwd = full_path.string();
+    std::cout  << pwd << std::endl;
 }
 /**
    @brief Bultin command: change directory.

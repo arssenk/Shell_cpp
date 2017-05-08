@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     printf("> ");
     char *line = lsh_read_line();
     char **args = lsh_split_line(line);
-    char *help = "-h" ;
+    char *help = "-h";
     char *noPermission = "-f";
     char *helpInfo =  "This is copy function. \n"
             "cp [-h|--help] [-f] <file1> <file2> (copy file1 to file2) \n"
