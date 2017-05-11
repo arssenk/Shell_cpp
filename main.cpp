@@ -9,6 +9,7 @@
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include "ls.h"
 #include <iostream>
+#include <sys/stat.h>
 #include "mkdir.h"
 
 using namespace std;
@@ -20,6 +21,7 @@ namespace fs = boost::filesystem;
 int lsh_cd(char **args);
 int lsh_exit(char **args);
 int  lsh_pwd(char **args);
+int global_int;
 /*
   List of builtin commands, followed by their corresponding functions.
  */
@@ -102,7 +104,8 @@ int lsh_cd(char **args)
  */
 int lsh_exit(char **args)
 {
-    return 0;
+    global_int  = atoi(args[1]);
+    return  0;
 }
 
 /**
@@ -161,15 +164,21 @@ int lsh_execute(char **args)
 
 
     }
-    if (args == (char **) "ls_func"){
-        printf("POBEDA~~~");
-//        if (strcmp(args[0], additional_str[i]) == 0){
-//            return (*additional_func[i])(args);   // load function
+    if (strcmp((const char *) args[0], "1") == 0){
+        execvp("./ls_cpp", args);
+//        struct stat sb;
+//        //Checking whether it's a directory and if it's so, then whether it's valid.
+//            if (args[1] && (strchr(args[1], '/') != NULL) & (stat(args[1], &sb) == 0 && S_ISDIR(sb.st_mode))){
+//                printf("First if");
+//            return 0;
 //        }
+//        else if (args[1] && (strchr(args[1], '.') != NULL))
+//        {
+//            printf("Second if");
+//            return 0;
+//        }
+//        cout << "END\n";
     }
-    printf(args[0]);
-    printf("\n");
-
     return lsh_launch(args);
 }
 
@@ -193,6 +202,7 @@ char *lsh_read_line(void)
    @param line The line.
    @return Null-terminated array of tokens.
  */
+ //What do you mean(header)?
 char **lsh_split_line(char *line)
 {
     int bufsize = LSH_TOK_BUFSIZE, position = 0;
@@ -229,7 +239,7 @@ char **lsh_split_line(char *line)
 /**
    @brief Loop getting input and executing it.
  */
-void lsh_loop(void)
+int lsh_loop(void)
 {
     char *line;
     char **args;
@@ -242,10 +252,10 @@ void lsh_loop(void)
         args = lsh_split_line(line);
 
         status = lsh_execute(args);
-
         free(line);
         free(args);
     } while (status);
+    return status;
 }
 
 /**
@@ -259,9 +269,11 @@ int main(int argc, char **argv)
     // Load config files, if any.
 
     // Run command loop.
-    lsh_loop();
+    int stat;
+    stat = lsh_loop();
     //ls_func(argc, argv);
     // Perform any shutdown/cleanup.
 
+    exit (global_int);
     return EXIT_SUCCESS;
 }

@@ -4,15 +4,15 @@ project(Shell_cpp_proj)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp )
+set(SOURCE_FILES main.cpp)
 set(SOURCE_FILES_LS main_ls.cpp ls.cpp ls.h )
 set(SOURCE_FILES_MKDIR main_mkdir.cpp mkdir.cpp mkdir.h)
 
-add_executable(Shell_cpp ${SOURCE_FILES} mkdir.cpp )
+add_executable(Shell_cpp ${SOURCE_FILES} mkdir.cpp)
 add_executable(ls_cpp ${SOURCE_FILES_LS})
 add_executable(mkdir_cpp ${SOURCE_FILES_MKDIR})
 
-FIND_PACKAGE( Boost COMPONENTS filesystem program_options system REQUIRED )
+FIND_PACKAGE( Boost COMPONENTS filesystem program_options regex program_options system REQUIRED )
 
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 

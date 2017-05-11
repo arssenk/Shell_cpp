@@ -6,6 +6,9 @@
 #define SHELL_CPP_LS_H
 
 #include <boost/filesystem/path.hpp>
-
-int ls_func(boost::filesystem::path argv);
+#include <boost/regex.hpp>
+#include <string.h>
+#include <vector>
+int ls_func(std::vector<std::string> &vec);
+std::vector<std::string> search_by_mask(std::string mask, std::string dir_path);
 #endif //SHELL_CPP_LS_H
