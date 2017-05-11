@@ -4,6 +4,8 @@
 #include "mkdir.h"
 
 #include <iostream>
+//qwertyuiopsdfghjklxcvbnm,kl.wsdfghjkl
+
 
 using namespace std;
 using namespace boost::filesystem;
