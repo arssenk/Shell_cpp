@@ -6,6 +6,6 @@
 #define SHELL_CPP_PROJ_MKDIR_H
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
-
-void mkdir_func(boost::filesystem::path p, boost::filesystem::path name);
+using namespace std;
+void mkdir_func(std::vector<std::string> strVec, int argc);
 #endif //SHELL_CPP_PROJ_MKDIR_H

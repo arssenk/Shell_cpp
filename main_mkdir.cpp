@@ -4,13 +4,20 @@
 #include "mkdir.h"
 #include <iostream>
 using namespace std;
-int main(int argc, char **argv)
+using namespace boost::filesystem;
+namespace fs = boost::filesystem;
 
-{
-//    boost::filesystem::path name;
-//    cin >> name;
-//    boost::filesystem::path full_path(boost::filesystem::current_path());
-//    mkdir_func(full_path, name);
-    return 0;
-}
+
+int main(int argc, char **argv) {
+    std::vector<std::string> strVec;
+
+    for(int i = 0; i < argc ; ++i){
+        strVec.push_back(std::string(argv[i]));}
+
+
+    mkdir_func(strVec, argc);
+    return 0;}
+
+
+
 
