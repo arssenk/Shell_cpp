@@ -19,7 +19,7 @@ void mkdir_func(std::vector<std::string> strVEC, int argc)
             is_help = true;}}
 
     if (is_help){
-        std::cout << "Usage: mkdir [OPTION]... DIRECTORY...\n";
+        std::cout << "Usage: mkdir2 [OPTION]..  . DIRECTORY...\n";
         std::cout << "Create the DIRECTORY(ies), if they do not already exist." <<"\n";
         return;}
     // taking current path

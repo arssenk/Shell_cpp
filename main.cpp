@@ -70,7 +70,7 @@ int lsh_num_builtins() {
 int lsh_pwd(char **args)
 {
     boost::filesystem::path full_path(boost::filesystem::current_path());
-    string pwd = full_path.string();
+        string pwd = full_path.string();
     std::cout  << pwd << std::endl;
 }
 /**
