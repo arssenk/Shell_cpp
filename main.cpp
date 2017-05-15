@@ -43,7 +43,7 @@ const  char *  additional_str[] = {
 using additional_func_t = void (*)(fs::path p, fs::path name);
 
 additional_func_t additional_funcs[] = {
-        &mkdir_func
+       // &mkdir_func
 };
 
 
@@ -151,12 +151,12 @@ int lsh_execute(char **args)
         // An empty command was entered.
         return 1;
     }
-    if (args == (char **) "mkdir"){
-        boost::filesystem::path name;
-        cin >> name;
-        mkdir_func(fs::current_path(), name);
-        return 0;
-    }
+//    if (args == (char **) "mkdir"){
+//        boost::filesystem::path name;
+//        cin >> name;
+//        mkdir_func(fs::current_path(), name);
+//        return 0;
+//    }
     for (i = 0; i < lsh_num_builtins(); i++) {
         if (strcmp(args[0], builtin_str[i]) == 0) {
             return (*builtin_func[i])(args);
@@ -166,18 +166,11 @@ int lsh_execute(char **args)
     }
     if (strcmp((const char *) args[0], "1") == 0){
         execvp("./ls_cpp", args);
-//        struct stat sb;
-//        //Checking whether it's a directory and if it's so, then whether it's valid.
-//            if (args[1] && (strchr(args[1], '/') != NULL) & (stat(args[1], &sb) == 0 && S_ISDIR(sb.st_mode))){
-//                printf("First if");
-//            return 0;
-//        }
-//        else if (args[1] && (strchr(args[1], '.') != NULL))
-//        {
-//            printf("Second if");
-//            return 0;
-//        }
-//        cout << "END\n";
+        return 1;
+    }
+    if (strcmp((const char *) args[0], "m") == 0){
+        execvp("./mkdir_cpp", args);
+        return 1;
     }
     return lsh_launch(args);
 }
