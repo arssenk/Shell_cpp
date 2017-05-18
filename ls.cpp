@@ -14,16 +14,14 @@
 #include <dirent.h>
 #include <boost/algorithm/string.hpp>
 
-using namespace boost::filesystem;
-using namespace std;
 
 struct Pair {
-    string name;
+    std::string name;
     long int size;
     time_t timestamp;
 };
 
-Pair make_Pair(const string &name, const long int &size, time_t &timestamp) {
+Pair make_Pair(const std::string &name, const long int &size, time_t &timestamp) {
     Pair ret;
     ret.name = name;
     ret.size = size;
@@ -38,10 +36,6 @@ const char *findExt(const char *filename) {
     return e;
 }
 
-bool sort_by_size_reverse(Pair one, Pair two) {
-    return (one.size < two.size);
-}
-
 bool sort_by_size(Pair one, Pair two) {
     return (one.size >= two.size);
 }
@@ -50,18 +44,10 @@ bool sort_by_date(Pair one, Pair two) {
     return ((one.timestamp - two.timestamp) >= 0);
 }
 
-bool sort_by_date_reverse(Pair one, Pair two) {
-    return ((one.timestamp - two.timestamp) < 0);
-}
 
 bool sort_by_extn(Pair one, Pair two) {
     return strcmp(findExt(one.name.c_str()), findExt(two.name.c_str())) <= 0;
 }
-
-bool sort_by_extn_reverse(Pair one, Pair two) {
-    return strcmp(findExt(one.name.c_str()), findExt(two.name.c_str())) > 0;
-}
-
 
 bool in_array(const std::string &value, const std::vector<std::string> &array) {
     return std::find(array.begin(), array.end(), value) != array.end();
@@ -136,17 +122,13 @@ std::vector<std::string> traverse_throught_dir(std::string dir_path, bool print_
     for (boost::filesystem::directory_iterator i(target_path); i != end_itr; ++i) {
         // Skip if not a file
         if (!boost::filesystem::is_regular_file(i->status())) {
-            if (print_choice) {
-                cout << "/" << i->path().filename().c_str() << endl;
-            }
+            if (print_choice) std::cout << "/" << i->path().filename().c_str() << std::endl;
             all_matching_files.push_back(("/" + i->path().filename().string()).c_str());
             continue;
         }
         if (print_choice) std::cout << i->path().filename().c_str() << std::endl;
-     //   l_key(i->path().filename().c_str());
         all_matching_files.push_back(i->path().filename().c_str());
     }
-    cout << "EXITING Traverse \n";
     return all_matching_files;
 }
 
@@ -170,16 +152,16 @@ std::vector<std::string> search_by_mask(std::string mask, std::string dir_path, 
     return all_matching_files;
 }
 
-string help_describe() {
-    string answer = "ls [path|mask] [-l] [-h|--help] [--sort=U|S|t|X] [-r]\n"
+std::string help_describe() {
+    std::string answer = "ls [path|mask] [-l] [-h|--help] [--sort=U|S|t|X] [-r]\n"
             "-l - information about file(name, size, modification date)\n"
             "--sort: \nU - don't sort\nS - by size\nt - modification date\nX - extension \nN - name(by default)\n-r - reversed sort";
     return answer;
 }
 
-vector<Pair> create_vector_of_pairs(std::vector<std::string> args) {
+std::vector<Pair> create_vector_of_pairs(std::vector<std::string> args) {
     std::vector<Pair> PairID;
-    for (string fileName : args) {
+    for (std::string fileName : args) {
         PairID.push_back(l_key(fileName.c_str()));
     }
     return PairID;
@@ -218,7 +200,6 @@ int ls_func(std::vector<std::string> &myargs) {
             ans = traverse_throught_dir(boost::filesystem::current_path().c_str(), false);
         }
         sort(ans.begin(), ans.end());
-        cout << "GOT HERE " << endl;
     } else if (in_array("--sort=S", myargs)) {
         if (ans.size() == 0) {
             printf("Found sort -S with ans.size = 0");
@@ -233,9 +214,6 @@ int ls_func(std::vector<std::string> &myargs) {
         }
         PairID = create_vector_of_pairs(ans);
         sort(PairID.begin(), PairID.end(), sort_by_date);
-//        for (Pair f: PairID) {
-//            if (f.name != "") { cout << f.name << ", " << f.timestamp << endl; }
-//        }
     } else if (in_array("--sort=X", myargs)) {
         if (ans.size() == 0) {
             printf("Found sort -X with ans.size = 0");
@@ -243,9 +221,6 @@ int ls_func(std::vector<std::string> &myargs) {
         }
         PairID = create_vector_of_pairs(ans);
         sort(PairID.begin(), PairID.end(), sort_by_extn);
-//        for (Pair item : PairID) {
-//            cout << item.name << endl;
-//        }
     }
     if (in_array("-r", myargs)) {
         if (PairID.size() == 0 && ans.size() == 0) {
@@ -257,23 +232,22 @@ int ls_func(std::vector<std::string> &myargs) {
         reverse(PairID.begin(), PairID.end());
     }
     bool present_l = in_array("-l", myargs);
-    
-        if (ans.size() == 0 && PairID.size() == 0) {
-            ans = traverse_throught_dir(boost::filesystem::current_path().c_str());
-            for (string filename: ans) {
-                l_key(filename.c_str(), !present_l, present_l);
-            }
+
+    if (ans.size() == 0 && PairID.size() == 0) {
+        ans = traverse_throught_dir(boost::filesystem::current_path().c_str());
+        for (std::string filename: ans) {
+            l_key(filename.c_str(), !present_l, present_l);
         }
-        else if (PairID.size() != 0) {
-            for (Pair filename: PairID) {
-                l_key(filename.name.c_str(), !present_l, present_l);
-            }
-        } else {
-            for (string filename: ans) {
-                l_key(filename.c_str(), !present_l, present_l);
-            }
+    } else if (PairID.size() != 0) {
+        for (Pair filename: PairID) {
+            l_key(filename.name.c_str(), !present_l, present_l);
         }
-    
+    } else {
+        for (std::string filename: ans) {
+            l_key(filename.c_str(), !present_l, present_l);
+        }
+    }
+
     return 1;
 }
 

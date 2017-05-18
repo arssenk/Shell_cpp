@@ -4,35 +4,41 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #define BOOST_NO_CXX11_SCOPED_ENUMS
+
 #include <boost/filesystem.hpp>
+
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
+
 #include "ls.h"
 #include <iostream>
-#include <sys/stat.h>
-#include "mkdir.h"
 
 using namespace std;
 using namespace boost::filesystem;
 namespace fs = boost::filesystem;
+
 /*
   Function Declarations for builtin shell commands:
  */
 int lsh_cd(char **args);
+
 int lsh_exit(char **args);
-int  lsh_pwd(char **args);
+
+int lsh_pwd(char **args);
+
 int global_int;
 /*
   List of builtin commands, followed by their corresponding functions.
  */
-char *builtin_str[] = {
+const char *builtin_str[] = {
         "cd",
         "exit",
         "pwd"
 };
 
 
-const  char *  additional_str[] = {
+const char *additional_str[] = {
         "mkdir",
         "ls",
         "cp",
@@ -43,11 +49,11 @@ const  char *  additional_str[] = {
 using additional_func_t = void (*)(fs::path p, fs::path name);
 
 additional_func_t additional_funcs[] = {
-       // &mkdir_func
+        // &mkdir_func
 };
 
 
-int (*builtin_func[]) (char **) = {
+int (*builtin_func[])(char **) = {
         &lsh_cd,
         &lsh_exit,
         &lsh_pwd
@@ -67,19 +73,18 @@ int lsh_num_builtins() {
  * List of args, where agrs[0] is "pwd"
  */
 
-int lsh_pwd(char **args)
-{
+int lsh_pwd(char **args) {
     boost::filesystem::path full_path(boost::filesystem::current_path());
-        string pwd = full_path.string();
-    std::cout  << pwd << std::endl;
+    string pwd = full_path.string();
+    std::cout << pwd << std::endl;
 }
+
 /**
    @brief Bultin command: change directory.
    @param args List of args.  args[0] is "cd".  args[1] is the directory.
    @return Always returns 1, to continue executing.
  */
-int lsh_cd(char **args)
-{
+int lsh_cd(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "lsh: expected argument to \"cd\"\n");
     } else {
@@ -102,10 +107,9 @@ int lsh_cd(char **args)
    @param args List of args.  Not examined.
    @return Always returns 0, to terminate execution.
  */
-int lsh_exit(char **args)
-{
-    global_int  = atoi(args[1]);
-    return  0;
+int lsh_exit(char **args) {
+    if (args[1]) global_int = atoi(args[1]);
+    return 0;
 }
 
 /**
@@ -113,15 +117,14 @@ int lsh_exit(char **args)
   @param args Null terminated list of arguments (including program).
   @return Always returns 1, to continue execution.
  */
-int lsh_launch(char **args)
-{
+int lsh_launch(char **args) {
     pid_t pid;
     int status;
 
     pid = fork();
     if (pid == 0) {
         // Child process
-        if (execvp(args[0], args) == -1) {
+        if (execvp(("./execs/" + std::string(args[0])).c_str(), args) == -1) {
             perror("lsh");
         }
         exit(EXIT_FAILURE);
@@ -143,8 +146,7 @@ int lsh_launch(char **args)
    @param args Null terminated list of arguments.
    @return 1 if the shell should continue running, 0 if it should terminate
  */
-int lsh_execute(char **args)
-{
+int lsh_execute(char **args) {
     int i;
 
     if (args[0] == NULL) {
@@ -164,24 +166,21 @@ int lsh_execute(char **args)
 
 
     }
-    if (strcmp((const char *) args[0], "1") == 0){
-        execvp("./ls_cpp", args);
-        return 1;
+    if (strcmp((const char *) args[0], "ls_cpp") == 0) {
+        return lsh_launch(args);
     }
-    if (strcmp((const char *) args[0], "m") == 0){
+    if (strcmp((const char *) args[0], "m") == 0) {
         execvp("./mkdir_cpp", args);
         return 1;
     }
     return lsh_launch(args);
 }
 
-#define LSH_RL_BUFSIZE 1024
 /**
    @brief Read a line of input from stdin.
    @return The line from stdin.
  */
-char *lsh_read_line(void)
-{
+char *lsh_read_line(void) {
     char *line = NULL;
     size_t bufsize = 0; // have getline allocate a buffer for us
     getline(&line, &bufsize, stdin);
@@ -195,11 +194,10 @@ char *lsh_read_line(void)
    @param line The line.
    @return Null-terminated array of tokens.
  */
- //What do you mean(header)?
-char **lsh_split_line(char *line)
-{
+//What do you mean(header)?
+char **lsh_split_line(char *line) {
     int bufsize = LSH_TOK_BUFSIZE, position = 0;
-    char **tokens = (char **) malloc(bufsize * sizeof(char*));
+    char **tokens = (char **) malloc(bufsize * sizeof(char *));
     char *token, **tokens_backup;
 
     if (!tokens) {
@@ -214,7 +212,7 @@ char **lsh_split_line(char *line)
         if (position >= bufsize) {
             bufsize += LSH_TOK_BUFSIZE;
             tokens_backup = tokens;
-            tokens = (char **) realloc(tokens, bufsize * sizeof(char*));
+            tokens = (char **) realloc(tokens, bufsize * sizeof(char *));
             if (!tokens) {
                 free(tokens_backup);
                 fprintf(stderr, "lsh: allocation error\n");
@@ -232,8 +230,7 @@ char **lsh_split_line(char *line)
 /**
    @brief Loop getting input and executing it.
  */
-int lsh_loop(void)
-{
+int lsh_loop(void) {
     char *line;
     char **args;
     int status;
@@ -257,16 +254,13 @@ int lsh_loop(void)
    @param argv Argument vector.
    @return status code
  */
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     // Load config files, if any.
 
     // Run command loop.
-    int stat;
-    stat = lsh_loop();
+    lsh_loop();
     //ls_func(argc, argv);
     // Perform any shutdown/cleanup.
-
-    exit (global_int);
+    if (global_int) exit(global_int);
     return EXIT_SUCCESS;
 }
