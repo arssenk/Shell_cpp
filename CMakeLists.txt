@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.6)
 project(Shell_cpp_proj)
 
 set(CMAKE_CXX_STANDARD 11)
+FIND_PACKAGE(Boost 1.58.0)
 
 set(SOURCE_FILES main.cpp)
 set(SOURCE_FILES_LS main_ls.cpp ls.cpp ls.h )
@@ -20,3 +21,7 @@ INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 target_link_libraries( Shell_cpp ${Boost_LIBRARIES} )
 target_link_libraries( ls_cpp ${Boost_LIBRARIES} )
 target_link_libraries( mkdir_cpp ${Boost_LIBRARIES} )
+
+if(NOT Boost_FOUND)
+    message(FATAL_ERROR "Could not find boost!")
+endif()
