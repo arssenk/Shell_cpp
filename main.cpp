@@ -125,7 +125,7 @@ int lsh_launch(char **args) {
     pid = fork();
     if (pid == 0) {
         // Child process
-        if (execvp(("./execs/" + std::string(args[0])).c_str(), args) == -1) {
+        if (execvp((std::string(args[0])).c_str(), args) == -1) {
             perror("lsh");
         }
         exit(EXIT_FAILURE);
@@ -167,9 +167,9 @@ int lsh_execute(char **args) {
 
 
     }
-    if (strcmp((const char *) args[0], "ls_cpp") == 0) {
-        return lsh_launch(args);
-    }
+//    if (strcmp((const char *) args[0], "ls_cpp") == 0) {
+//        return lsh_launch(args);
+//    }
     if (strcmp((const char *) args[0], "m") == 0) {
         execvp("./mkdir_cpp", args);
         return 1;
@@ -248,7 +248,20 @@ int lsh_loop(void) {
     } while (status);
     return status;
 }
-
+void addCurrDirToPass(){
+    char* pPath;
+    pPath = getenv ("PATH");
+    char* ret = new char[strlen(pPath)+2];
+    strcpy(ret, pPath);
+    char dir[256];
+    string s;
+    getcwd(dir, 250);
+    s = ret;
+    s.append(":");
+    s.append(dir);
+    s.append("/execs/");
+    setenv("PATH", s.c_str(), 1);
+}
 /**
    @brief Main entry point.
    @param argc Argument count.
@@ -256,9 +269,8 @@ int lsh_loop(void) {
    @return status code
  */
 int main(int argc, char **argv) {
-    // Load config files, if any.
-
-    // Run command loop.
+    addCurrDirToPass();
+     // Run command loop.
     lsh_loop();
     //ls_func(argc, argv);
     // Perform any shutdown/cleanup.
