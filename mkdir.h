@@ -7,5 +7,5 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
 using namespace std;
-void mkdir_func(std::vector<std::string> strVec, int argc);
+int mkdir_func(std::vector<std::string> strVec, int argc);
 #endif //SHELL_CPP_PROJ_MKDIR_H
