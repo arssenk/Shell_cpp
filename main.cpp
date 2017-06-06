@@ -154,12 +154,9 @@ int lsh_execute(char **args) {
         // An empty command was entered.
         return 1;
     }
-//    if (args == (char **) "mkdir"){
-//        boost::filesystem::path name;
-//        cin >> name;
-//        mkdir_func(fs::current_path(), name);
-//        return 0;
-//    }
+
+
+
     for (i = 0; i < lsh_num_builtins(); i++) {
         if (strcmp(args[0], builtin_str[i]) == 0) {
             return (*builtin_func[i])(args);
@@ -167,15 +164,17 @@ int lsh_execute(char **args) {
 
 
     }
+
 //    if (strcmp((const char *) args[0], "ls_cpp") == 0) {
 //        return lsh_launch(args);
 //    }
-    if (strcmp((const char *) args[0], "m") == 0) {
-        execvp("./mkdir_cpp", args);
-        return 1;
-    }
+//    if (strcmp((const char *) args[0], "m") == 0) {
+//        execvp("./mkdir_cpp", args);
+//        return 1;
+//    }
     return lsh_launch(args);
 }
+
 
 /**
    @brief Read a line of input from stdin.
@@ -186,6 +185,19 @@ char *lsh_read_line(void) {
     size_t bufsize = 0; // have getline allocate a buffer for us
     getline(&line, &bufsize, stdin);
     return line;
+}
+//
+char* splitbydel(char *args){
+
+    char* token;
+    if(args != NULL){
+        if ((token = strsep(&args, "/#")) != NULL)
+        {
+
+            return token;
+        }
+    }
+    return args;
 }
 
 #define LSH_TOK_BUFSIZE 64
@@ -239,7 +251,7 @@ int lsh_loop(void) {
     do {
         printf("> ");
         line = lsh_read_line();
-
+        splitbydel(line);
         args = lsh_split_line(line);
 
         status = lsh_execute(args);
@@ -248,6 +260,8 @@ int lsh_loop(void) {
     } while (status);
     return status;
 }
+
+
 void addCurrDirToPass(){
     char* pPath;
     pPath = getenv ("PATH");

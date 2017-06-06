@@ -1,1 +1,0 @@
-ls.cpp printf(args[0]) не працює, а cout працює.
