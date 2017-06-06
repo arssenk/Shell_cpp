@@ -96,7 +96,6 @@ void parseInput(vector<string> input) {
     string filename = findFileName(input);
     string str = getString(input);
 
-
     cout << "filename: " << filename << endl;
     cout << "string to match: " << str << endl;
 
