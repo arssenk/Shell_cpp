@@ -99,7 +99,6 @@ void parseInput(vector<string> input) {
     cout << "filename: " << filename << endl;
     cout << "string to match: " << str << endl;
 
-
     if (filename.compare("")){
         std::ifstream file(filename.c_str());
         grep(str, file, v, i);
