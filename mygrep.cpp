@@ -88,6 +88,7 @@ void parseInput(vector<string> input) {
         v = 1;
         cout << "v or invert found" << endl;
     }
+
     if(in_array("-i", input) || in_array("--ignore-case", input)){
         i = 1;
         cout << "i or ignore case found" << endl;
