@@ -9,7 +9,6 @@
 #include <boost/algorithm/string.hpp>
 #include <fstream>
 
-
 using namespace std;
 
 
@@ -21,27 +20,35 @@ std::string help_describe() {
     return "grep [-h|--help] [-v|--invert-match] [-i|--ignore-case] [--file=<filename>] string";
 }
 
+
 void grep(std::string stringToMatch, std::istream &in, int &v, int &i) // just one file
 {
     // search file for stringToMatch
     // print line containing stringToMatch
     std::string line;
+    cout << "In grep" << endl;
     while (std::getline(in, line))
     {
         std::istringstream iss(line);
-        if (v) {
-            if (i){
-                if (!boost::iequals(iss.str(), stringToMatch)) cout << "Found: " << iss.str() << endl;} else{
-            if (!iss.str().find(stringToMatch) != std::string::npos) cout << "Found: " << iss.str() << endl;
-            }
-        } else{
-            if (i){
-                if (boost::iequals(iss.str(), stringToMatch)) cout << "Found: " << iss.str() << endl;
-        } else{
-            if (iss.str().find(stringToMatch) != std::string::npos) {
-                cout << "Found: " << iss.str() << endl;
-            }}
+        if (iss.str().find(stringToMatch) != std::string::npos){
+            cout << "Found string: " << iss.str() << endl;
         }
+        else{
+            cout << "Nothing found in string: "<< iss.str() << endl;
+        }
+//        if (v) {
+//            if (i){
+//                if (!boost::iequals(iss.str(), stringToMatch)) cout << "Found: " << iss.str() << endl;} else{
+//            if (!iss.str().find(stringToMatch) != std::string::npos) cout << "Found: " << iss.str() << endl;
+//            }
+//        } else{
+//            if (i){
+//                if (boost::iequals(iss.str(), stringToMatch)) cout << "Found: " << iss.str() << endl;
+//        } else{
+//            if (iss.str().find(stringToMatch) != std::string::npos) {
+//                cout << "Found: " << iss.str() << endl;
+//            }}
+//        }
     }
 }
 void removeCharsFromString( string &str, char* charsToRemove ) {
@@ -55,7 +62,6 @@ string findFileName(vector<string> &input){
     for (string name: input){
        if (name.find("--file=") != std::string::npos){
            if (name.size()  > (name.find("="))) {
-               cout << "ASDASD: " << name.find("=") << endl;
                input.erase(input.begin() + i);
                 removeCharsFromString(name, (char *) "\"");
                return name.substr(name.find("=")+1, name.size());
@@ -73,17 +79,22 @@ string findFileName(vector<string> &input){
 }
 string getString(vector<string> input){
     string fullLine = "";
-    for (string str: input){
-        fullLine = fullLine + str + " ";
-    }
-    return fullLine.substr(fullLine.find_first_of("\"") + 1, fullLine.find_last_of("\"")-1);
+    for (string str: input)fullLine = fullLine + str + " ";
+    return  fullLine.substr(0, fullLine.size()-1);
 }
 void parseInput(vector<string> input) {
+    if (input.size() < 1) {
+        cout << "No parameters found" << endl;
+        exit(0);
+    }
     if (in_array("-h", input) || in_array("--help", input)) {
         input.erase(std::remove(input.begin(), input.end(), "-"), input.end());
         cout << help_describe().c_str() << endl;
+        exit(0);
     }
-    int v, i = 0;
+    //int v,i = 0;????
+    int v = 0;
+    int i = 0;
     if(in_array("-v", input) || in_array("--invert-match", input)){
         v = 1;
         cout << "v or invert found" << endl;
@@ -94,16 +105,23 @@ void parseInput(vector<string> input) {
     }
     string filename = findFileName(input);
     string str = getString(input);
-
+  //  if (filename == "") getline(cin, filename);
     cout << "filename: " << filename << endl;
     cout << "string to match: " << str << endl;
+cout << "V: " << v << "comp: " <<filename.compare("") << endl;
+
+    if (filename != ""){
 
 
-    if (filename.compare("")){
         std::ifstream file(filename.c_str());
+        if (!file.is_open()) {
+            cout << "Cannot find the file "<< endl;
+            exit(1);
+        }
         grep(str, file, v, i);
     }
     else{
+        cout << "Finding in cin: "<< endl;
         grep(str, std::cin, v, i);
     }
         cout << "Nothing found";
